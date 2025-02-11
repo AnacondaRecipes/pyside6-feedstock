@@ -1,0 +1,165 @@
+{% set version = "6.7.2" %}
+{% set version_major_minor_match = '.'.join(version.split('.')[0:3]) %}
+
+package:
+  name: pyside6
+  version: {{ version }}
+
+source:
+  url: https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-{{ version }}-src/pyside-setup-everywhere-src-{{ version }}.tar.xz
+  sha256: 3a2b0d0d6e78c9aa5ddc7f06ca4b6f11a3fe14560baeb148eea53b5d98e368c7
+  patches:
+    # https://bugreports.qt.io/browse/PYSIDE-1193
+    - patches/pyi_osx.patch
+    - patches/qfp_osx.patch
+
+    # https://bugreports.qt.io/browse/PYSIDE-2057
+    - patches/do_not_store_build_time_compiler.patch
+
+    # change tools module location
+    - patches/tools.patch
+
+    # https://bugreports.qt.io/browse/PYSIDE-2192
+    # backport of PyOS_InputHook downloaded from https://codereview.qt-project.org/c/pyside/pyside-setup/+/454254
+    # should be removed for 6.7.3+
+    - patches/1864c79.diff
+
+build:
+  number: 0
+  # 6.8.x is required for python > 3.12
+  skip: true  # [py<39 or py>312 or s390x]
+  skip: true  # [osx and x86_64]
+  entry_points:
+    - pyside6-rcc = PySide6.scripts.pyside_tool:rcc
+    - pyside6-uic = PySide6.scripts.pyside_tool:uic
+
+requirements:
+  build:
+    - cmake
+    - ninja
+    - patch     # [unix]
+    - m2-patch  # [win]
+    - libffi {{ libffi }}
+    - zlib {{ zlib }}
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ cdt('alsa-lib-devel') }}             # [linux]
+    - {{ cdt('cups-devel') }}                 # [linux]
+    - {{ cdt('gtkmm24-devel') }}              # [linux]
+    - {{ cdt('libdrm-devel') }}               # [linux]
+    - {{ cdt('libglvnd-glx') }}               # [linux and aarch64]
+    - {{ cdt('libglvnd-egl') }}               # [linux and aarch64]
+    - {{ cdt('libice-devel') }}               # [linux]
+    - {{ cdt('libselinux-devel') }}           # [linux]
+    - {{ cdt('libsm-devel') }}                # [linux]
+    - {{ cdt('libx11-devel') }}               # [linux]
+    - {{ cdt('libxau-devel') }}               # [linux]
+    - {{ cdt('libxcomposite-devel') }}        # [linux]
+    - {{ cdt('libxcursor-devel') }}           # [linux]
+    - {{ cdt('libxdamage-devel') }}           # [linux]
+    - {{ cdt('libxext-devel') }}              # [linux]
+    - {{ cdt('libxfixes-devel') }}            # [linux]
+    - {{ cdt('libxi-devel') }}                # [linux]
+    - {{ cdt('libxkbfile-devel') }}           # [linux]
+    - {{ cdt('libxrandr-devel') }}            # [linux]
+    - {{ cdt('libxrender-devel') }}           # [linux]
+    - {{ cdt('libxscrnsaver-devel') }}        # [linux]
+    - {{ cdt('libxtst-devel') }}              # [linux]
+    - {{ cdt('libxxf86vm-devel') }}           # [linux]
+    - {{ cdt('mesa-libgl-devel') }}           # [linux]
+    - {{ cdt('mesa-libgbm-devel') }}          # [linux]
+    - {{ cdt('mesa-libegl-devel') }}          # [linux]
+    - {{ cdt('mesa-dri-drivers') }}           # [linux]
+    - {{ cdt('pciutils-devel') }}             # [linux]
+    - {{ cdt('xcb-util-devel') }}             # [linux]
+    - {{ cdt('xcb-util-image-devel') }}       # [linux]
+    - {{ cdt('xcb-util-keysyms-devel') }}     # [linux]
+    - {{ cdt('xcb-util-renderutil-devel') }}  # [linux]
+    - {{ cdt('xcb-util-wm-devel') }}          # [linux]
+    - {{ cdt('xorg-x11-proto-devel') }}       # [linux]
+
+  host:
+    - python
+    - setuptools
+    - expat {{ expat }}            # [linux and not aarch64]
+    - gtk2 2.24                    # [linux]
+    - libxcb 1.15                  # [linux]
+    - libxslt {{ libxslt }}
+    - libxml2 {{ libxml2 }}
+    - mypy 1.11
+    - numpy {{ numpy }}
+    - qtbase {{ version }}
+    - qtdeclarative {{ version }}
+    - qtshadertools {{ version }}
+    - qtsvg {{ version }}
+    - qttools {{ version }}
+    - qtwebchannel {{ version }}
+    - qtwebengine {{ version }}
+    - qtwebsockets {{ version }}
+    - clangdev {{ cxx_compiler_version }}  # [osx]
+    - clangdev 14.0                        # [not osx]
+    - zstd {{ zstd }}
+  run:
+    - python
+    # Pulled in transitively through clangdev but is a weak export so we have to add it here.
+    - {{ pin_compatible("libclang13", max_pin="x.x") }}
+  run_constrained:
+    - qt5compat {{ version }}
+    - qtimageformats {{ version }}
+    - qttranslations {{ version }}
+
+test:
+  requires:
+    - {{ cdt('alsa-lib-devel') }}             # [linux]
+    - {{ cdt('cups-devel') }}                 # [linux]
+    - {{ cdt('gtkmm24-devel') }}              # [linux]
+    - {{ cdt('libdrm-devel') }}               # [linux]
+    - {{ cdt('libglvnd-glx') }}               # [linux and aarch64]
+    - {{ cdt('libglvnd-egl') }}               # [linux and aarch64]
+    - {{ cdt('libice-devel') }}               # [linux]
+    - {{ cdt('libselinux-devel') }}           # [linux]
+    - {{ cdt('libsm-devel') }}                # [linux]
+    - {{ cdt('libx11-devel') }}               # [linux]
+    - {{ cdt('libxau-devel') }}               # [linux]
+    - {{ cdt('libxcomposite-devel') }}        # [linux]
+    - {{ cdt('libxcursor-devel') }}           # [linux]
+    - {{ cdt('libxdamage-devel') }}           # [linux]
+    - {{ cdt('libxext-devel') }}              # [linux]
+    - {{ cdt('libxfixes-devel') }}            # [linux]
+    - {{ cdt('libxi-devel') }}                # [linux]
+    - {{ cdt('libxkbfile-devel') }}           # [linux]
+    - {{ cdt('libxrandr-devel') }}            # [linux]
+    - {{ cdt('libxrender-devel') }}           # [linux]
+    - {{ cdt('libxscrnsaver-devel') }}        # [linux]
+    - {{ cdt('libxtst-devel') }}              # [linux]
+    - {{ cdt('libxxf86vm-devel') }}           # [linux]
+    - {{ cdt('mesa-libgl-devel') }}           # [linux]
+    - {{ cdt('mesa-libgbm-devel') }}          # [linux]
+    - {{ cdt('mesa-libegl-devel') }}          # [linux]
+    - {{ cdt('mesa-dri-drivers') }}           # [linux]
+    - {{ cdt('pciutils-devel') }}             # [linux]
+    - {{ cdt('xcb-util-devel') }}             # [linux]
+    - {{ cdt('xcb-util-image-devel') }}       # [linux]
+    - {{ cdt('xcb-util-keysyms-devel') }}     # [linux]
+    - {{ cdt('xcb-util-renderutil-devel') }}  # [linux]
+    - {{ cdt('xcb-util-wm-devel') }}          # [linux]
+    - {{ cdt('xorg-x11-proto-devel') }}       # [linux]
+  imports:
+    - PySide6
+
+about:
+  home: https://wiki.qt.io/Qt_for_Python
+  license: LGPL-3.0-only
+  license_file: LICENSES/LGPL-3.0-only.txt
+  license_family: LGPL
+  summary: Python bindings for Qt
+  description: |
+    PySide6 is the official Python module from the Qt for Python project, which provides access to the complete
+    Qt 6.0+ framework.
+  doc_url: https://doc.qt.io/qtforpython-6
+  dev_url: https://code.qt.io/cgit/pyside/pyside-setup.git
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
+    - jschueller
