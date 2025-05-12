@@ -1,5 +1,5 @@
 {% set version = "6.7.2" %}
-{% set version_major_minor_match = '.'.join(version.split('.')[0:3]) %}
+{% set version_major_minor_match = "'.'.join(version.split('.')[0:3])" %}
 
 package:
   name: pyside6
@@ -12,20 +12,17 @@ source:
     # https://bugreports.qt.io/browse/PYSIDE-1193
     - patches/pyi_osx.patch
     - patches/qfp_osx.patch
-
     # https://bugreports.qt.io/browse/PYSIDE-2057
     - patches/do_not_store_build_time_compiler.patch
-
     # change tools module location
     - patches/tools.patch
-
     # https://bugreports.qt.io/browse/PYSIDE-2192
     # backport of PyOS_InputHook downloaded from https://codereview.qt-project.org/c/pyside/pyside-setup/+/454254
     # should be removed for 6.7.3+
     - patches/1864c79.diff
 
 build:
-  number: 0
+  number: 2
   # 6.8.x is required for python > 3.12
   skip: true  # [py<39 or py>312 or s390x]
   skip: true  # [osx and x86_64]
@@ -37,53 +34,36 @@ requirements:
   build:
     - cmake
     - ninja
-    - patch     # [unix]
+    - patch  # [unix]
     - m2-patch  # [win]
     - libffi {{ libffi }}
     - zlib {{ zlib }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ cdt('alsa-lib-devel') }}             # [linux]
-    - {{ cdt('cups-devel') }}                 # [linux]
-    - {{ cdt('gtkmm24-devel') }}              # [linux]
-    - {{ cdt('libdrm-devel') }}               # [linux]
-    - {{ cdt('libglvnd-glx') }}               # [linux and aarch64]
-    - {{ cdt('libglvnd-egl') }}               # [linux and aarch64]
-    - {{ cdt('libice-devel') }}               # [linux]
-    - {{ cdt('libselinux-devel') }}           # [linux]
-    - {{ cdt('libsm-devel') }}                # [linux]
-    - {{ cdt('libx11-devel') }}               # [linux]
-    - {{ cdt('libxau-devel') }}               # [linux]
-    - {{ cdt('libxcomposite-devel') }}        # [linux]
-    - {{ cdt('libxcursor-devel') }}           # [linux]
-    - {{ cdt('libxdamage-devel') }}           # [linux]
-    - {{ cdt('libxext-devel') }}              # [linux]
-    - {{ cdt('libxfixes-devel') }}            # [linux]
-    - {{ cdt('libxi-devel') }}                # [linux]
-    - {{ cdt('libxkbfile-devel') }}           # [linux]
-    - {{ cdt('libxrandr-devel') }}            # [linux]
-    - {{ cdt('libxrender-devel') }}           # [linux]
-    - {{ cdt('libxscrnsaver-devel') }}        # [linux]
-    - {{ cdt('libxtst-devel') }}              # [linux]
-    - {{ cdt('libxxf86vm-devel') }}           # [linux]
-    - {{ cdt('mesa-libgl-devel') }}           # [linux]
-    - {{ cdt('mesa-libgbm-devel') }}          # [linux]
-    - {{ cdt('mesa-libegl-devel') }}          # [linux]
-    - {{ cdt('mesa-dri-drivers') }}           # [linux]
-    - {{ cdt('pciutils-devel') }}             # [linux]
-    - {{ cdt('xcb-util-devel') }}             # [linux]
-    - {{ cdt('xcb-util-image-devel') }}       # [linux]
-    - {{ cdt('xcb-util-keysyms-devel') }}     # [linux]
-    - {{ cdt('xcb-util-renderutil-devel') }}  # [linux]
-    - {{ cdt('xcb-util-wm-devel') }}          # [linux]
-    - {{ cdt('xorg-x11-proto-devel') }}       # [linux]
-
+    # TODO: map CDT alsa-lib-devel to new X11 package
+    # - { cdt('alsa-lib-devel') }
+    # TODO: map CDT cups-devel to new X11 package
+    # - { cdt('cups-devel') }
+    # TODO: map CDT gtkmm24-devel to new X11 package
+    # - { cdt('gtkmm24-devel') }
+    # TODO: map CDT libdrm-devel to new X11 package
+    # - { cdt('libdrm-devel') }
+    # TODO: map CDT libselinux-devel to new X11 package
+    # - { cdt('libselinux-devel') }
+    # TODO: map CDT libxkbfile-devel to new X11 package
+    # - { cdt('libxkbfile-devel') }
+    # TODO: map CDT mesa-libgbm-devel to new X11 package
+    # - { cdt('mesa-libgbm-devel') }
+    # TODO: map CDT mesa-libegl-devel to new X11 package
+    # - { cdt('mesa-libegl-devel') }
+    # TODO: map CDT pciutils-devel to new X11 package
+    # - { cdt('pciutils-devel') }
   host:
     - python
     - setuptools
-    - expat {{ expat }}            # [linux and not aarch64]
-    - gtk2 2.24                    # [linux]
-    - libxcb 1.15                  # [linux]
+    - expat {{ expat }}  # [linux and not aarch64]
+    - gtk2 2.24  # [linux]
+    - libxcb 1.15  # [linux]
     - libxslt {{ libxslt }}
     - libxml2 {{ libxml2 }}
     - mypy 1.11
@@ -97,8 +77,58 @@ requirements:
     - qtwebengine {{ version }}
     - qtwebsockets {{ version }}
     - clangdev {{ cxx_compiler_version }}  # [osx]
-    - clangdev 14.0                        # [not osx]
+    - clangdev 14.0  # [not osx]
     - zstd {{ zstd }}
+    - libglx
+    - libegl
+    - xorg-libice
+    - xorg-libsm
+    - xorg-libx11
+    - xorg-libxau
+    - xorg-libxcomposite
+    - xorg-libxcursor
+    - xorg-libxdamage
+    - xorg-libxext
+    - xorg-libxfixes
+    - xorg-libxi
+    - xorg-libxrandr
+    - xorg-libxrender
+    - xorg-libxscrnsaver
+    - xorg-libxtst
+    - xorg-libxxf86vm
+    - libgl-devel
+    - mesa-dri-drivers
+    - xcb-util
+    - xcb-util-image
+    - xcb-util-keysyms
+    - xcb-util-renderutil
+    - xcb-util-wm
+    - xorg-xproto
+    - libglx
+    - libegl
+    - xorg-libice
+    - xorg-libsm
+    - xorg-libx11
+    - xorg-libxau
+    - xorg-libxcomposite
+    - xorg-libxcursor
+    - xorg-libxdamage
+    - xorg-libxext
+    - xorg-libxfixes
+    - xorg-libxi
+    - xorg-libxrandr
+    - xorg-libxrender
+    - xorg-libxscrnsaver
+    - xorg-libxtst
+    - xorg-libxxf86vm
+    - libgl-devel
+    - mesa-dri-drivers
+    - xcb-util
+    - xcb-util-image
+    - xcb-util-keysyms
+    - xcb-util-renderutil
+    - xcb-util-wm
+    - xorg-xproto
   run:
     - python
     # Pulled in transitively through clangdev but is a weak export so we have to add it here.
@@ -110,40 +140,24 @@ requirements:
 
 test:
   requires:
-    - {{ cdt('alsa-lib-devel') }}             # [linux]
-    - {{ cdt('cups-devel') }}                 # [linux]
-    - {{ cdt('gtkmm24-devel') }}              # [linux]
-    - {{ cdt('libdrm-devel') }}               # [linux]
-    - {{ cdt('libglvnd-glx') }}               # [linux and aarch64]
-    - {{ cdt('libglvnd-egl') }}               # [linux and aarch64]
-    - {{ cdt('libice-devel') }}               # [linux]
-    - {{ cdt('libselinux-devel') }}           # [linux]
-    - {{ cdt('libsm-devel') }}                # [linux]
-    - {{ cdt('libx11-devel') }}               # [linux]
-    - {{ cdt('libxau-devel') }}               # [linux]
-    - {{ cdt('libxcomposite-devel') }}        # [linux]
-    - {{ cdt('libxcursor-devel') }}           # [linux]
-    - {{ cdt('libxdamage-devel') }}           # [linux]
-    - {{ cdt('libxext-devel') }}              # [linux]
-    - {{ cdt('libxfixes-devel') }}            # [linux]
-    - {{ cdt('libxi-devel') }}                # [linux]
-    - {{ cdt('libxkbfile-devel') }}           # [linux]
-    - {{ cdt('libxrandr-devel') }}            # [linux]
-    - {{ cdt('libxrender-devel') }}           # [linux]
-    - {{ cdt('libxscrnsaver-devel') }}        # [linux]
-    - {{ cdt('libxtst-devel') }}              # [linux]
-    - {{ cdt('libxxf86vm-devel') }}           # [linux]
-    - {{ cdt('mesa-libgl-devel') }}           # [linux]
-    - {{ cdt('mesa-libgbm-devel') }}          # [linux]
-    - {{ cdt('mesa-libegl-devel') }}          # [linux]
-    - {{ cdt('mesa-dri-drivers') }}           # [linux]
-    - {{ cdt('pciutils-devel') }}             # [linux]
-    - {{ cdt('xcb-util-devel') }}             # [linux]
-    - {{ cdt('xcb-util-image-devel') }}       # [linux]
-    - {{ cdt('xcb-util-keysyms-devel') }}     # [linux]
-    - {{ cdt('xcb-util-renderutil-devel') }}  # [linux]
-    - {{ cdt('xcb-util-wm-devel') }}          # [linux]
-    - {{ cdt('xorg-x11-proto-devel') }}       # [linux]
+    # TODO: map CDT alsa-lib-devel to new X11 package
+    # - { cdt('alsa-lib-devel') }
+    # TODO: map CDT cups-devel to new X11 package
+    # - { cdt('cups-devel') }
+    # TODO: map CDT gtkmm24-devel to new X11 package
+    # - { cdt('gtkmm24-devel') }
+    # TODO: map CDT libdrm-devel to new X11 package
+    # - { cdt('libdrm-devel') }
+    # TODO: map CDT libselinux-devel to new X11 package
+    # - { cdt('libselinux-devel') }
+    # TODO: map CDT libxkbfile-devel to new X11 package
+    # - { cdt('libxkbfile-devel') }
+    # TODO: map CDT mesa-libgbm-devel to new X11 package
+    # - { cdt('mesa-libgbm-devel') }
+    # TODO: map CDT mesa-libegl-devel to new X11 package
+    # - { cdt('mesa-libegl-devel') }
+    # TODO: map CDT pciutils-devel to new X11 package
+    # - { cdt('pciutils-devel') }
   imports:
     - PySide6
 
