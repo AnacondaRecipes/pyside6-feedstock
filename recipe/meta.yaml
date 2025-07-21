@@ -1,5 +1,5 @@
 {% set version = "6.7.2" %}
-{% set version_major_minor_match = "'.'.join(version.split('.')[0:3])" %}
+{% set version_major_minor_match = '.'.join(version.split('.')[0:3]) %}
 
 package:
   name: pyside6
@@ -22,9 +22,9 @@ source:
     - patches/1864c79.diff
 
 build:
-  number: 2
+  number: 1
   # 6.8.x is required for python > 3.12
-  skip: true  # [py<39 or py>312 or s390x]
+  skip: true  # [py<39 or py>312]
   skip: true  # [osx and x86_64]
   entry_points:
     - pyside6-rcc = PySide6.scripts.pyside_tool:rcc
@@ -32,43 +32,24 @@ build:
 
 requirements:
   build:
-    - cmake
-    - ninja
-    - patch  # [unix]
-    - m2-patch  # [win]
-    - libffi {{ libffi }}
-    - zlib {{ zlib }}
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    # TODO: map CDT alsa-lib-devel to new X11 package
-    # - { cdt('alsa-lib-devel') }
-    # TODO: map CDT cups-devel to new X11 package
-    # - { cdt('cups-devel') }
-    # TODO: map CDT gtkmm24-devel to new X11 package
-    # - { cdt('gtkmm24-devel') }
-    # TODO: map CDT libdrm-devel to new X11 package
-    # - { cdt('libdrm-devel') }
-    # TODO: map CDT libselinux-devel to new X11 package
-    # - { cdt('libselinux-devel') }
-    # TODO: map CDT libxkbfile-devel to new X11 package
-    # - { cdt('libxkbfile-devel') }
-    # TODO: map CDT mesa-libgbm-devel to new X11 package
-    # - { cdt('mesa-libgbm-devel') }
-    # TODO: map CDT mesa-libegl-devel to new X11 package
-    # - { cdt('mesa-libegl-devel') }
-    # TODO: map CDT pciutils-devel to new X11 package
-    # - { cdt('pciutils-devel') }
+    - cmake
+    - ninja
+    - patch        # [unix]
+    - msys2-patch  # [win]
   host:
     - python
     - setuptools
     - expat {{ expat }}  # [linux and not aarch64]
     - gtk2 2.24  # [linux]
-    - libxcb 1.15  # [linux]
+    - libxcb {{ libxcb }}  # [linux]
     - libxslt {{ libxslt }}
     - libxml2 {{ libxml2 }}
-    - mypy 1.11
+    - mypy
     - numpy {{ numpy }}
-    - qtbase {{ version }}
+    - qtbase-devel {{ version }}
     - qtdeclarative {{ version }}
     - qtshadertools {{ version }}
     - qtsvg {{ version }}
@@ -77,58 +58,14 @@ requirements:
     - qtwebengine {{ version }}
     - qtwebsockets {{ version }}
     - clangdev {{ cxx_compiler_version }}  # [osx]
-    - clangdev 14.0  # [not osx]
+    - clangdev 17.0  # [not osx]
     - zstd {{ zstd }}
-    - libglx
-    - libegl
-    - xorg-libice
-    - xorg-libsm
-    - xorg-libx11
-    - xorg-libxau
-    - xorg-libxcomposite
-    - xorg-libxcursor
-    - xorg-libxdamage
-    - xorg-libxext
-    - xorg-libxfixes
-    - xorg-libxi
-    - xorg-libxrandr
-    - xorg-libxrender
-    - xorg-libxscrnsaver
-    - xorg-libxtst
-    - xorg-libxxf86vm
-    - libgl-devel
-    - mesa-dri-drivers
-    - xcb-util
-    - xcb-util-image
-    - xcb-util-keysyms
-    - xcb-util-renderutil
-    - xcb-util-wm
-    - xorg-xproto
-    - libglx
-    - libegl
-    - xorg-libice
-    - xorg-libsm
-    - xorg-libx11
-    - xorg-libxau
-    - xorg-libxcomposite
-    - xorg-libxcursor
-    - xorg-libxdamage
-    - xorg-libxext
-    - xorg-libxfixes
-    - xorg-libxi
-    - xorg-libxrandr
-    - xorg-libxrender
-    - xorg-libxscrnsaver
-    - xorg-libxtst
-    - xorg-libxxf86vm
-    - libgl-devel
-    - mesa-dri-drivers
-    - xcb-util
-    - xcb-util-image
-    - xcb-util-keysyms
-    - xcb-util-renderutil
-    - xcb-util-wm
-    - xorg-xproto
+    - libgl-devel                        # [linux]
+    - libegl-devel                       # [linux]
+    - libopengl-devel                    # [linux]
+    - libvulkan-headers                  # [not osx]
+    - libvulkan-loader                   # [not osx]
+
   run:
     - python
     # Pulled in transitively through clangdev but is a weak export so we have to add it here.

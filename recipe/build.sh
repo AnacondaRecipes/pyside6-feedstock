@@ -51,6 +51,7 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
   -D_qt5Core_install_prefix=${PREFIX} \
   -DBUILD_TESTS=ON \
+  -DFORCE_LIMITED_API=OFF \
   -DPython_EXECUTABLE=${PYTHON} \
   -DNUMPY_INCLUDE_DIR=${SP_DIR}/numpy/core/include \
   ..
