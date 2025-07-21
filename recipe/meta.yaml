@@ -1,5 +1,6 @@
 {% set version = "6.7.2" %}
 {% set version_major_minor_match = '.'.join(version.split('.')[0:3]) %}
+{% set qt_version = "6" %}
 
 package:
   name: pyside6
@@ -49,14 +50,14 @@ requirements:
     - libxml2 {{ libxml2 }}
     - mypy
     - numpy {{ numpy }}
-    - qtbase-devel {{ version }}
-    - qtdeclarative {{ version }}
-    - qtshadertools {{ version }}
-    - qtsvg {{ version }}
-    - qttools {{ version }}
-    - qtwebchannel {{ version }}
-    - qtwebengine {{ version }}
-    - qtwebsockets {{ version }}
+    - qtbase {{ qt_version }}
+    - qtdeclarative {{ qt_version }}
+    - qtshadertools {{ qt_version }}
+    - qtsvg {{ qt_version }}
+    - qttools {{ qt_version }}
+    - qtwebchannel {{ qt_version }}
+    - qtwebengine {{ qt_version }}
+    - qtwebsockets {{ qt_version }}
     - clangdev {{ cxx_compiler_version }}  # [osx]
     - clangdev 17.0  # [not osx]
     - zstd {{ zstd }}
