@@ -11,8 +11,8 @@ cmake -LAH -G "Ninja"                               ^
     -DCMAKE_UNITY_BUILD_BATCH_SIZE=32               ^
     -DPYTHON_SITE_PACKAGES="%SP_DIR:\=/%"           ^
     -DCMAKE_BUILD_TYPE=Release                      ^
+    -DFORCE_LIMITED_API=ON                          ^
     -DBUILD_TESTS=OFF                               ^
-    -DFORCE_LIMITED_API=OFF                         ^
     -DPython_EXECUTABLE="%PYTHON%"                  ^
     -DNUMPY_INCLUDE_DIR=%SP_DIR%\numpy\core\include ^
     .
@@ -39,6 +39,7 @@ cmake -LAH -G "Ninja"                               ^
     -DPYTHON_SITE_PACKAGES="%SP_DIR:\=/%"           ^
     -DCMAKE_BUILD_TYPE=Release                      ^
     -DPython_EXECUTABLE="%PYTHON%"                  ^
+    -DFORCE_LIMITED_API=ON                          ^
     -DNUMPY_INCLUDE_DIR=%SP_DIR%\numpy\core\include ^
     .
 if errorlevel 1 exit 1

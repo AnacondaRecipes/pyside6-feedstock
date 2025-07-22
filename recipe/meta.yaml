@@ -1,6 +1,5 @@
-{% set version = "6.7.2" %}
+{% set version = "6.7.3" %}
 {% set version_major_minor_match = '.'.join(version.split('.')[0:3]) %}
-{% set qt_version = "6" %}
 
 package:
   name: pyside6
@@ -8,7 +7,7 @@ package:
 
 source:
   url: https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-{{ version }}-src/pyside-setup-everywhere-src-{{ version }}.tar.xz
-  sha256: 3a2b0d0d6e78c9aa5ddc7f06ca4b6f11a3fe14560baeb148eea53b5d98e368c7
+  sha256: a4c414be013d5051a2d10a9a1151e686488a3172c08a57461ea04b0a0ab74e09
   patches:
     # https://bugreports.qt.io/browse/PYSIDE-1193
     - patches/pyi_osx.patch
@@ -17,10 +16,8 @@ source:
     - patches/do_not_store_build_time_compiler.patch
     # change tools module location
     - patches/tools.patch
-    # https://bugreports.qt.io/browse/PYSIDE-2192
-    # backport of PyOS_InputHook downloaded from https://codereview.qt-project.org/c/pyside/pyside-setup/+/454254
-    # should be removed for 6.7.3+
-    - patches/1864c79.diff
+    # TODO: Remove this patch once we switch to a setuptools-based build instead of directly calling CMake.
+    - patches/add-opengl-header-path.patch  # [linux]
 
 build:
   number: 1
@@ -43,30 +40,25 @@ requirements:
   host:
     - python
     - setuptools
-    - expat {{ expat }}  # [linux and not aarch64]
-    - gtk2 2.24  # [linux]
-    - libxcb {{ libxcb }}  # [linux]
+    - gtk2 2.24                            # [linux]
     - libxslt {{ libxslt }}
     - libxml2 {{ libxml2 }}
     - mypy
-    - numpy {{ numpy }}
-    - qtbase {{ qt_version }}
-    - qtdeclarative {{ qt_version }}
-    - qtshadertools {{ qt_version }}
-    - qtsvg {{ qt_version }}
-    - qttools {{ qt_version }}
-    - qtwebchannel {{ qt_version }}
-    - qtwebengine {{ qt_version }}
-    - qtwebsockets {{ qt_version }}
+    # https://code.qt.io/cgit/pyside/pyside-setup.git/tree/requirements.txt?h=6.7.3
+    - numpy 1.26.3
+    - qtbase-devel {{ qt }}
+    - qtdeclarative {{ qt }}
+    - qtshadertools {{ qt }}
+    - qtsvg {{ qt }}
+    - qttools {{ qt }}
+    - qtwebchannel {{ qt }}
+    - qtwebengine {{ qt }}
+    - qtwebsockets {{ qt }}
     - clangdev {{ cxx_compiler_version }}  # [osx]
-    - clangdev 17.0  # [not osx]
+    - clangdev 14.0                        # [not osx]
     - zstd {{ zstd }}
-    - libgl-devel                        # [linux]
-    - libegl-devel                       # [linux]
-    - libopengl-devel                    # [linux]
-    - libvulkan-headers                  # [not osx]
-    - libvulkan-loader                   # [not osx]
-
+    - libgl-devel                          # [linux]
+    - libglx-devel                         # [linux]
   run:
     - python
     # Pulled in transitively through clangdev but is a weak export so we have to add it here.
@@ -77,27 +69,41 @@ requirements:
     - qttranslations {{ version }}
 
 test:
-  requires:
-    # TODO: map CDT alsa-lib-devel to new X11 package
-    # - { cdt('alsa-lib-devel') }
-    # TODO: map CDT cups-devel to new X11 package
-    # - { cdt('cups-devel') }
-    # TODO: map CDT gtkmm24-devel to new X11 package
-    # - { cdt('gtkmm24-devel') }
-    # TODO: map CDT libdrm-devel to new X11 package
-    # - { cdt('libdrm-devel') }
-    # TODO: map CDT libselinux-devel to new X11 package
-    # - { cdt('libselinux-devel') }
-    # TODO: map CDT libxkbfile-devel to new X11 package
-    # - { cdt('libxkbfile-devel') }
-    # TODO: map CDT mesa-libgbm-devel to new X11 package
-    # - { cdt('mesa-libgbm-devel') }
-    # TODO: map CDT mesa-libegl-devel to new X11 package
-    # - { cdt('mesa-libegl-devel') }
-    # TODO: map CDT pciutils-devel to new X11 package
-    # - { cdt('pciutils-devel') }
   imports:
     - PySide6
+    - PySide6.QtCore
+    - PySide6.QtDBus
+    - PySide6.QtDesigner
+    - PySide6.QtGui
+    - PySide6.QtHelp
+    - PySide6.QtNetwork
+    - PySide6.QtOpenGL
+    - PySide6.QtOpenGLWidgets
+    - PySide6.QtPdf
+    - PySide6.QtPdfWidgets
+    - PySide6.QtPrintSupport
+    - PySide6.QtQml
+    - PySide6.QtQuick
+    - PySide6.QtQuickWidgets
+    - PySide6.QtSql
+    - PySide6.QtSvg
+    - PySide6.QtSvgWidgets
+    - PySide6.QtTest
+    - PySide6.QtWebChannel
+    - PySide6.QtWebEngineCore
+    - PySide6.QtWebEngineQuick
+    - PySide6.QtWebEngineWidgets
+    - PySide6.QtWebSockets
+    - PySide6.QtWidgets
+    - PySide6.QtXml
+  requires:
+    - pip
+    - qtbase-devel {{ qt }}
+  commands:
+    - pip check
+    - shiboken6 --help
+    - pyside6-rcc -help
+    - pyside6-uic -help
 
 about:
   home: https://wiki.qt.io/Qt_for_Python

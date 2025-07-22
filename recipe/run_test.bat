@@ -1,5 +1,3 @@
-%PYTHON% %RECIPE_DIR%/check_imports.py
-
 :: Use `python --version` instead of %PY_VER% because sometimes PY_VER is not the version used to build the package.
 for /f "tokens=2" %%i in ('%PYTHON% --version') do set python_version_string=%%i
 set py_ver=%python_version_string:~0,4%
@@ -17,7 +15,3 @@ if not exist %LIBRARY_LIB%\\pyside6.cp%py_ver%-win_amd64.lib (echo "FATAL: Faile
 if not exist %LIBRARY_LIB%\\cmake\\PySide6\\PySide6Config.cmake (echo "FATAL: Failed to find %LIBRARY_LIB%\\cmake\\PySide6\\PySide6Config.cmake" && exit 10)
 if not exist %LIBRARY_LIB%\\pkgconfig\\pyside6.pc (echo "FATAL: Failed to find %LIBRARY_LIB%\\pkgconfig\\pyside6.pc" && exit 11)
 if not exist %LIBRARY_LIB%\\pkgconfig\\shiboken6.pc (echo "FATAL: Failed to find %LIBRARY_LIB%\\pkgconfig\\shiboken6.pc" && exit 12)
-
-shiboken6 --help
-pyside6-rcc -help
-pyside6-uic -help
