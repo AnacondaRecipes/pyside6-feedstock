@@ -7,7 +7,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://download.qt.io/official_releases/QtForPython/{{ name }}/PySide6-{{ version }}-src/{{ name }}-setup-everywhere-src-{{ version }}.tar.xz
+  url: https://download.qt.io/official_releases/QtForPython/{{ name }}/PySide6-{{ version }}-src/pyside-setup-everywhere-src-{{ version }}.tar.xz
   sha256: a4c414be013d5051a2d10a9a1151e686488a3172c08a57461ea04b0a0ab74e09
   patches:
     # https://bugreports.qt.io/browse/PYSIDE-1193
