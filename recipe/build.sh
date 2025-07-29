@@ -13,6 +13,7 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_RPATH=${PREFIX}/lib \
+  -DFORCE_LIMITED_API=OFF \
   -DBUILD_TESTS=OFF \
   -DPython_EXECUTABLE=${PYTHON} \
   -DNUMPY_INCLUDE_DIR=${SP_DIR}/numpy/core/include \
@@ -28,15 +29,6 @@ echo "Version: ${PKG_VERSION}" >> ${SP_DIR}/shiboken6-${PKG_VERSION}.dist-info/M
 echo "Done: shiboken6"
 echo "Building: pyside6"
 
-if [[ "${target_platform}" == linux-* ]]; then
-  # Hack to help the gn build tool find alsa during build. We can't add ${BUILD_PREFIX}/${HOST}/sysroot/lib64 to the
-  # LD_LIBRARY_PATH below because it causes segfaults in many system applications.
-  ln -s ../../lib64/libasound.so.2 ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64/libasound.so.2
-
-  # Add runtime path of libEGL.so.1 for generate_pyi.py
-  export LD_LIBRARY_PATH="${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64:${LD_LIBRARY_PATH}"
-fi
-
 pushd sources/pyside6
 mkdir build && cd build
 
@@ -50,6 +42,7 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_UNITY_BUILD=ON \
   -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
   -D_qt5Core_install_prefix=${PREFIX} \
+  -DFORCE_LIMITED_API=OFF \
   -DBUILD_TESTS=ON \
   -DPython_EXECUTABLE=${PYTHON} \
   -DNUMPY_INCLUDE_DIR=${SP_DIR}/numpy/core/include \
