@@ -14,7 +14,6 @@ cmake -LAH -G "Ninja"                               ^
     -DFORCE_LIMITED_API=OFF                         ^
     -DBUILD_TESTS=OFF                               ^
     -DPython_EXECUTABLE="%PYTHON%"                  ^
-    -DNUMPY_INCLUDE_DIR=%SP_DIR%\numpy\core\include ^
     .
 if errorlevel 1 exit 1
 
@@ -40,7 +39,6 @@ cmake -LAH -G "Ninja"                               ^
     -DCMAKE_BUILD_TYPE=Release                      ^
     -DPython_EXECUTABLE="%PYTHON%"                  ^
     -DFORCE_LIMITED_API=OFF                         ^
-    -DNUMPY_INCLUDE_DIR=%SP_DIR%\numpy\core\include ^
     .
 if errorlevel 1 exit 1
 
