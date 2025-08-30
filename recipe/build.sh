@@ -16,7 +16,6 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DFORCE_LIMITED_API=OFF \
   -DBUILD_TESTS=OFF \
   -DPython_EXECUTABLE=${PYTHON} \
-  -DNUMPY_INCLUDE_DIR=${SP_DIR}/numpy/core/include \
   ..
 cmake --build . --target install
 popd
@@ -45,7 +44,6 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DFORCE_LIMITED_API=OFF \
   -DBUILD_TESTS=ON \
   -DPython_EXECUTABLE=${PYTHON} \
-  -DNUMPY_INCLUDE_DIR=${SP_DIR}/numpy/core/include \
   ..
 cmake --build . --target install
 
