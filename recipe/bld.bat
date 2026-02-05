@@ -1,6 +1,6 @@
 set LLVM_INSTALL_DIR=%LIBRARY_PREFIX%
 
-:: build shiboken only
+echo Building: shiboken6
 cmake %CMAKE_ARGS% -LAH -G "Ninja"                               ^
     -DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 ^
     -DPYTHON_SITE_PACKAGES="%SP_DIR:\=/%"           ^
@@ -18,7 +18,9 @@ mkdir %SP_DIR%\shiboken6-%PKG_VERSION%.dist-info
 copy %RECIPE_DIR%\METADATA.shiboken6.in %SP_DIR%\shiboken6-%PKG_VERSION%.dist-info\METADATA
 echo Version: %PKG_VERSION% >> %SP_DIR%\shiboken6-%PKG_VERSION%.dist-info\METADATA
 type %SP_DIR%\shiboken6-%PKG_VERSION%.dist-info\METADATA
+echo Done: shiboken6
 
+echo Building: pyside6
 :: build all
 cmake %CMAKE_ARGS% -LAH -G "Ninja"                               ^
     -DCMAKE_UNITY_BUILD=ON                          ^
@@ -33,6 +35,7 @@ if errorlevel 1 exit 1
 
 cmake --build build --target install
 if errorlevel 1 exit 1
+echo Done: pyside6
 
 :: write dummy pyside metadata
 mkdir %SP_DIR%\PySide6-%PKG_VERSION%.dist-info
