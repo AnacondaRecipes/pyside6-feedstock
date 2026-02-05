@@ -18,6 +18,8 @@ source:
     - patches/tools.patch
     # TODO: Remove this patch once we switch to a setuptools-based build instead of directly calling CMake.
     - patches/add-opengl-header-path.patch  # [linux]
+    # LINK : fatal error LNK1104: cannot open file 'python3.lib'
+    - patches/no_abi3.patch
 
 build:
   number: 0
