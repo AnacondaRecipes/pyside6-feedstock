@@ -1,5 +1,5 @@
 {% set name = "PySide6" %}
-{% set version = "6.10.1" %}
+{% set version = "6.10.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://download.qt.io/official_releases/QtForPython/{{ name|lower }}/{{ name }}-{{ version }}-src/pyside-setup-everywhere-src-{{ version }}.tar.xz
-  sha256: fd54f40853d61dfd845dbb40d4f89fbd63df5ed341b3d9a2c77bb5c947a0a838
+  sha256: 05eec38bb71bffff8860786e3c0766cc4b86affc72439bd246c54889bdcb7400
   patches:
     # https://bugreports.qt.io/browse/PYSIDE-1193
     - patches/pyi_osx.patch

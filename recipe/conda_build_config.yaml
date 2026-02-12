@@ -30,4 +30,4 @@ CONDA_BUILD_SYSROOT:
   - /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk  # [osx and arm64]
 
 qt:
-  - 6.10.1
+  - 6.10.2
