@@ -1,5 +1,15 @@
+From c41272c01eaf8da009f660164399317cfc6371a3 Mon Sep 17 00:00:00 2001
+From: Andrii Osipov <aosipov@anaconda.com>
+Date: Wed, 1 Apr 2026 03:58:18 -0700
+Subject: [PATCH] no abi3
+
+---
+ sources/pyside6/plugins/designer/CMakeLists.txt | 2 +-
+ sources/shiboken6/cmake/ShibokenSetup.cmake     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/sources/pyside6/plugins/designer/CMakeLists.txt b/sources/pyside6/plugins/designer/CMakeLists.txt
-index f886c7f36..49bfcca2e 100644
+index 353d526..b0ad65e 100644
 --- a/sources/pyside6/plugins/designer/CMakeLists.txt
 +++ b/sources/pyside6/plugins/designer/CMakeLists.txt
 @@ -25,7 +25,7 @@ target_compile_definitions(PySidePlugin PRIVATE -DQT_NO_KEYWORDS=1)
@@ -8,14 +18,14 @@ index f886c7f36..49bfcca2e 100644
  # with default FORCE_LIMITED_API set to TRUE for building libshiboken
 -if(FORCE_LIMITED_API OR WIN32)
 +if(FORCE_LIMITED_API)
-     target_compile_definitions(PySidePlugin PRIVATE "-DPy_LIMITED_API=0x03090000")
+     target_compile_definitions(PySidePlugin PRIVATE "-DPy_LIMITED_API=0x030a0000")
  endif()
  
 diff --git a/sources/shiboken6/cmake/ShibokenSetup.cmake b/sources/shiboken6/cmake/ShibokenSetup.cmake
-index 32823d9fa..40df10fc7 100644
+index 73030bc..ebcf2e9 100644
 --- a/sources/shiboken6/cmake/ShibokenSetup.cmake
 +++ b/sources/shiboken6/cmake/ShibokenSetup.cmake
-@@ -57,7 +57,7 @@ endif()
+@@ -53,7 +53,7 @@ endif()
  option(FORCE_LIMITED_API "Enable the limited API." "yes")
  set(PYTHON_LIMITED_API 0)
  
@@ -24,3 +34,6 @@ index 32823d9fa..40df10fc7 100644
  
  if(PYTHON_LIMITED_API)
      set_limited_api()
+-- 
+2.39.3 (Apple Git-146)
+

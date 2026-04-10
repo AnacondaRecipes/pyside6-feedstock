@@ -1,10 +1,28 @@
 #!/bin/sh
 
+set -ex
+
+# --- shiboken6_generator (must run before shiboken6 / PySide6) ---
+echo "Building: shiboken6_generator"
+
+cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
+  -DCMAKE_PREFIX_PATH=${PREFIX} \
+  -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+  -DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_RPATH=${PREFIX}/lib \
+  -DBUILD_TESTS=OFF \
+  -DPython_EXECUTABLE=${PYTHON} \
+  -B build_shiboken_gen -S sources/shiboken6_generator
+cmake --build build_shiboken_gen --target install
+
+echo "Done: shiboken6_generator"
+
+# https://github.com/conda/conda-build/issues/5563
+export SP_DIR=$PREFIX/lib/python`python -c "import sysconfig; print(sysconfig.get_config_var('LDVERSION'))"`/site-packages
+
+# --- shiboken6 ---
 echo "Building: shiboken6"
-
-pushd sources/shiboken6
-
-mkdir build && cd build
 
 cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_PREFIX_PATH=${PREFIX} \
@@ -13,12 +31,11 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_RPATH=${PREFIX}/lib \
-  -DFORCE_LIMITED_API=OFF \
   -DBUILD_TESTS=OFF \
+  -DFORCE_LIMITED_API=OFF \
   -DPython_EXECUTABLE=${PYTHON} \
-  ..
-cmake --build . --target install
-popd
+  -B build_shiboken -S sources/shiboken6
+cmake --build build_shiboken --target install
 
 mkdir ${SP_DIR}/shiboken6-${PKG_VERSION}.dist-info
 cp ${RECIPE_DIR}/METADATA.shiboken6.in ${SP_DIR}/shiboken6-${PKG_VERSION}.dist-info/METADATA
@@ -26,10 +43,9 @@ cp ${RECIPE_DIR}/INSTALLER.in ${SP_DIR}/shiboken6-${PKG_VERSION}.dist-info/INSTA
 echo "Version: ${PKG_VERSION}" >> ${SP_DIR}/shiboken6-${PKG_VERSION}.dist-info/METADATA
 
 echo "Done: shiboken6"
-echo "Building: pyside6"
 
-pushd sources/pyside6
-mkdir build && cd build
+# --- PySide6 ---
+echo "Building: pyside6"
 
 cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_PREFIX_PATH=${PREFIX} \
@@ -40,12 +56,10 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_MACOSX_RPATH=ON \
   -DCMAKE_UNITY_BUILD=ON \
   -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
-  -D_qt5Core_install_prefix=${PREFIX} \
-  -DFORCE_LIMITED_API=OFF \
-  -DBUILD_TESTS=ON \
+  -DBUILD_TESTS=OFF \
   -DPython_EXECUTABLE=${PYTHON} \
-  ..
-cmake --build . --target install
+  -B build_pyside -S sources/pyside6
+cmake --build build_pyside --target install
 
 mkdir ${SP_DIR}/PySide6-${PKG_VERSION}.dist-info
 cp ${RECIPE_DIR}/METADATA.pyside6.in ${SP_DIR}/PySide6-${PKG_VERSION}.dist-info/METADATA
@@ -53,21 +67,19 @@ cp ${RECIPE_DIR}/INSTALLER.in ${SP_DIR}/PySide6-${PKG_VERSION}.dist-info/INSTALL
 echo "Version: ${PKG_VERSION}" >> ${SP_DIR}/PySide6-${PKG_VERSION}.dist-info/METADATA
 cat ${SP_DIR}/PySide6-${PKG_VERSION}.dist-info/METADATA
 
-popd
-
 echo "Done: pyside6"
-echo "Building: pyside-tools"
 
-pushd sources/pyside-tools
-mkdir build && cd build
+# --- pyside-tools ---
+echo "Building: pyside-tools"
 
 cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_PREFIX_PATH=${PREFIX} \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_BUILD_TYPE=Release \
+  -DNO_QT_TOOLS=yes \
   -DPython_EXECUTABLE=${PYTHON} \
-  ..
-cmake --build . --target install
+  -B build_tools -S sources/pyside-tools
+cmake --build build_tools --target install
 
 # Move pyside_tool.py to the right location
 mkdir -p "${SP_DIR}"/PySide6/scripts
