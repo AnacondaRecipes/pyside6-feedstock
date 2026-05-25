@@ -31,3 +31,5 @@ CONDA_BUILD_SYSROOT:
 
 qt:
   - 6.11.0
+libvulkan:
+  - 1.4.313
