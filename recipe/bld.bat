@@ -1,8 +1,9 @@
 set LLVM_INSTALL_DIR=%LIBRARY_PREFIX%
 
 echo Building: shiboken generator
-cmake %CMAKE_ARGS% -LAH -G "Ninja"                               ^
-    -DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 ^
+cmake %CMAKE_ARGS% -LAH -G "Ninja"                  ^
+    -DCMAKE_UNITY_BUILD=ON                          ^
+    -DCMAKE_UNITY_BUILD_BATCH_SIZE=32               ^
     -DBUILD_TESTS=OFF                               ^
     -DPython_EXECUTABLE="%PYTHON:\=/%"              ^
     -B build_shiboken_gen %SRC_DIR:\=/%/sources/shiboken6_generator
@@ -12,8 +13,9 @@ cmake --build build_shiboken_gen --target install
 if errorlevel 1 exit 1
 
 echo Building: shiboken6
-cmake %CMAKE_ARGS% -LAH -G "Ninja"                               ^
-    -DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 ^
+cmake %CMAKE_ARGS% -LAH -G "Ninja"                  ^
+    -DCMAKE_UNITY_BUILD=ON                          ^
+    -DCMAKE_UNITY_BUILD_BATCH_SIZE=32               ^
     -DPYTHON_SITE_PACKAGES="%SP_DIR:\=/%"           ^
     -DBUILD_TESTS=OFF                               ^
     -DFORCE_LIMITED_API=OFF                         ^
@@ -33,7 +35,7 @@ echo Done: shiboken6
 
 echo Building: pyside6
 :: build all
-cmake %CMAKE_ARGS% -LAH -G "Ninja"                               ^
+cmake %CMAKE_ARGS% -LAH -G "Ninja"                  ^
     -DCMAKE_UNITY_BUILD=ON                          ^
     -DCMAKE_UNITY_BUILD_BATCH_SIZE=32               ^
     -DPYTHON_SITE_PACKAGES="%SP_DIR:\=/%"           ^

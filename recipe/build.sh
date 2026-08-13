@@ -8,7 +8,8 @@ echo "Building: shiboken6_generator"
 cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DCMAKE_PREFIX_PATH=${PREFIX} \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-  -DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
+  -DCMAKE_UNITY_BUILD=ON \
+  -DCMAKE_UNITY_BUILD_BATCH_SIZE=32 \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_RPATH=${PREFIX}/lib \
   -DBUILD_TESTS=OFF \
@@ -59,6 +60,7 @@ cmake -LAH -G "Ninja" ${CMAKE_ARGS} \
   -DBUILD_TESTS=OFF \
   -DPython_EXECUTABLE=${PYTHON} \
   -B build_pyside -S sources/pyside6
+
 cmake --build build_pyside --target install
 
 mkdir ${SP_DIR}/PySide6-${PKG_VERSION}.dist-info
