@@ -22,7 +22,7 @@ source:
     - patches/no_abi3.patch
 
 build:
-  number: 1
+  number: 2
   skip: true  # [py<39]
   entry_points:
     - pyside6-rcc = PySide6.scripts.pyside_tool:rcc
@@ -56,7 +56,7 @@ requirements:
     - qtwebengine {{ qt }}
     - qtwebsockets {{ qt }}
     - clangdev {{ cxx_compiler_version }}  # [osx]
-    - clangdev 20                        # [not osx]
+    - clangdev 21                        # [not osx]
     - libclang
     - zstd {{ zstd }}
     - libgl-devel {{ libgl }}              # [linux]
