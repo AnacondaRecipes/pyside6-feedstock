@@ -22,7 +22,7 @@ source:
     - patches/no_abi3.patch
 
 build:
-  number: 3
+  number: 4
   skip: true  # [py<39]
   entry_points:
     - pyside6-rcc = PySide6.scripts.pyside_tool:rcc
@@ -65,6 +65,7 @@ requirements:
     - libvulkan-loader {{ libvulkan }}     # [not osx]
   run:
     - python
+    - qtbase-devel {{ qt }}
 
 test:
   imports:
